@@ -21,5 +21,21 @@ namespace LinqFunctions
             Func<int, bool> isEqual = number => number == 1;
             Assert.False(numbers.All(isEqual));
         }
+
+        [Fact]
+        public void AnyTrue()
+        {
+            List<int> numbers = new List<int> { 1, 2, 3, 4 };
+            Func<int, bool> isEqual = number => number == 3;
+            Assert.True(numbers.Any(isEqual));
+        }
+
+        [Fact]
+        public void AnyFalse()
+        {
+            List<int> numbers = new List<int> { 1, 2, 3, 4 };
+            Func<int, bool> isEqual = number => number == 5;
+            Assert.False(numbers.Any(isEqual));
+        }
     }
 }

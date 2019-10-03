@@ -20,6 +20,21 @@ namespace LinqFunctions
             return true;
         }
 
+        public static bool Any<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        {
+            CheckSource(source);
+            CheckPredicate(predicate);
+            foreach (var s in source)
+            {
+                if (predicate(s))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private static void CheckSource(object source)
         {
             if (source != null)
