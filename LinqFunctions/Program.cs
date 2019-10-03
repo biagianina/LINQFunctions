@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace LinqFunctions
 {
@@ -6,7 +7,9 @@ namespace LinqFunctions
     {
         static void Main()
         {
-            Console.WriteLine("Hello World!");
+            List<string> words = new List<string>();
+            Func<string, bool> isEqual = null;
+            words.All(word => isEqual(word));
         }
     }
 }

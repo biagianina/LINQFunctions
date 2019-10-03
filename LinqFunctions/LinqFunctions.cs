@@ -7,8 +7,8 @@ namespace LinqFunctions
     {
         public static bool All<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            CheckSource(source);
-            CheckPredicate(predicate);
+            CheckNullSourceOrPredicate(source, predicate);
+
             foreach (var s in source)
             {
                 if (!predicate(s))
@@ -22,8 +22,7 @@ namespace LinqFunctions
 
         public static bool Any<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            CheckSource(source);
-            CheckPredicate(predicate);
+            CheckNullSourceOrPredicate(source, predicate);
             foreach (var s in source)
             {
                 if (predicate(s))
@@ -35,24 +34,10 @@ namespace LinqFunctions
             return false;
         }
 
-        private static void CheckSource(object source)
+        private static void CheckNullSourceOrPredicate<TSource>(IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source != null)
-            {
-                return;
-            }
-
-            throw new ArgumentNullException(nameof(source));
-        }
-
-        private static void CheckPredicate<TSource>(Func<TSource, bool> predicate)
-        {
-            if (predicate != null)
-            {
-                return;
-            }
-
-            throw new ArgumentNullException(nameof(predicate));
+            _ = source ?? throw new ArgumentNullException(nameof(source));
+            _ = predicate ?? throw new ArgumentNullException(nameof(predicate));
         }
     }
 }
