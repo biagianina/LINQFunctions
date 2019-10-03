@@ -7,18 +7,37 @@ namespace LinqFunctions
     {
         public static bool All<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            bool result = false;
-            if (source == null || predicate == null)
-            {
-                throw new ArgumentException("Source or nameof(predicate) cannot be null");
-            }
-
+            CheckSource(source);
+            CheckPredicate(predicate);
             foreach (var s in source)
             {
-                result = predicate(s);
+                if (!predicate(s))
+                {
+                    return false;
+                }
             }
 
-            return result;
+            return true;
+        }
+
+        private static void CheckSource(object source)
+        {
+            if (source != null)
+            {
+                return;
+            }
+
+            throw new ArgumentNullException(nameof(source));
+        }
+
+        private static void CheckPredicate<TSource>(Func<TSource, bool> predicate)
+        {
+            if (predicate != null)
+            {
+                return;
+            }
+
+            throw new ArgumentNullException(nameof(predicate));
         }
     }
 }
