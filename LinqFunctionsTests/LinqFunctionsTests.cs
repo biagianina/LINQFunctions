@@ -45,5 +45,21 @@ namespace LinqFunctions
             Func<string, bool> isEqual = null;
             Assert.Throws<ArgumentNullException>(() => words.All(word => isEqual(word)));
         }
+
+        [Fact]
+        public void First()
+        {
+            List<int> numbers = new List<int> { 1, 2, 3, 4, 2 };
+            Func<int, bool> isEqual = number => number == 2;
+            Assert.Equal(2, numbers.First(number => isEqual(number)));
+        }
+
+        [Fact]
+        public void FirstException()
+        {
+            List<int> numbers = new List<int> { 1, 2, 3, 4, 2 };
+            Func<int, bool> isEqual = number => number == 5;
+            Assert.Throws<InvalidOperationException>(() => numbers.First(number => isEqual(number)));
+        }
     }
 }

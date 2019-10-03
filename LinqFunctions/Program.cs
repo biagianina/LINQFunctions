@@ -9,7 +9,8 @@ namespace LinqFunctions
         {
             List<string> words = new List<string>();
             Func<string, bool> isEqual = null;
-            words.All(word => isEqual(word));
+            var result = words.All(word => isEqual(word));
+            Console.WriteLine(result);
         }
     }
 }

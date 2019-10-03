@@ -34,6 +34,20 @@ namespace LinqFunctions
             return false;
         }
 
+        public static TSource First<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        {
+            CheckNullSourceOrPredicate(source, predicate);
+            foreach (var s in source)
+            {
+                if (predicate(s))
+                {
+                    return s;
+                }
+            }
+
+            throw new InvalidOperationException();
+        }
+
         private static void CheckNullSourceOrPredicate<TSource>(IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
