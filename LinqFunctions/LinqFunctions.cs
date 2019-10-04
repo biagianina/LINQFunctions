@@ -57,6 +57,18 @@ namespace LinqFunctions
             }
         }
 
+        public static IEnumerable<TResult> SelectMany<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, IEnumerable<TResult>> selector)
+        {
+            CheckNullSourceOrPredicate(source, selector);
+            foreach (var s in source)
+            {
+                foreach (var result in selector(s))
+                {
+                    yield return result;
+                }
+            }
+        }
+
         private static void CheckNullSourceOrPredicate(object source, object predicate)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LinqFunctions
 {
@@ -7,10 +8,14 @@ namespace LinqFunctions
     {
         static void Main()
         {
-            List<string> words = new List<string>();
-            Func<string, bool> isEqual = null;
-            var result = words.All(word => isEqual(word));
-            Console.WriteLine(result);
+            int[] numbers = { 1, 3, 4, 5, 9, 22, 16 };
+
+            Func<int, int> selector = x => x / 2;
+
+            foreach (var r in petOwners.SelectMany(x => selector(x)).Where(z => z.StartsWith("S")))
+            {
+                Console.WriteLine(r);
+            }
         }
     }
 }
