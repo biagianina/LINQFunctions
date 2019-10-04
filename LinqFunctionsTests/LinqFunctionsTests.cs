@@ -85,5 +85,14 @@ namespace LinqFunctions
             IEnumerable<string> expected = new List<string> { "Scruffy", "Sam", "Walker", "Sugar", "Scratches", "Diesel", "Dusty" };
             Assert.Equal(expected, petOwners.SelectMany(petOwner => selector(petOwner)));
         }
+
+        [Fact]
+        public void Where()
+        {
+            int[] numbers = { 1, 2, 3, 4, 5, 7, 8, 10, 11, 22, 33, 34 };
+            Func<int, bool> isEven = number => number % 2 == 0;
+            int[] expected = { 2, 4, 8, 10, 22, 34 };
+            Assert.Equal(expected, numbers.Where(number => isEven(number)));
+        }
     }
 }
