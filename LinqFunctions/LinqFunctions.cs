@@ -48,7 +48,16 @@ namespace LinqFunctions
             throw new InvalidOperationException();
         }
 
-        private static void CheckNullSourceOrPredicate<TSource>(IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        public static IEnumerable<TResult> Select<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector)
+        {
+            CheckNullSourceOrPredicate(source, selector);
+            foreach (var s in source)
+            {
+                yield return selector(s);
+            }
+        }
+
+        private static void CheckNullSourceOrPredicate(object source, object predicate)
         {
             _ = source ?? throw new ArgumentNullException(nameof(source));
             _ = predicate ?? throw new ArgumentNullException(nameof(predicate));

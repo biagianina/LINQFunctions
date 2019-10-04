@@ -61,5 +61,14 @@ namespace LinqFunctions
             Func<int, bool> isEqual = number => number == 5;
             Assert.Throws<InvalidOperationException>(() => numbers.First(number => isEqual(number)));
         }
+
+        [Fact]
+        public void Select()
+        {
+            List<string> words = new List<string> { "a", "abc", "ab", "abcd" };
+            Func<string, string> acceptWord = word => word.Substring(1);
+            IEnumerable<string> expected = new List<string> { "", "bc", "b", "bcd" };
+            Assert.Equal(expected, words.Select(word => acceptWord(word)));
+        }
     }
 }
