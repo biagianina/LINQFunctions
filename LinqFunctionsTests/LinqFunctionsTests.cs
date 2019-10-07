@@ -125,7 +125,16 @@ namespace LinqFunctions
             string[] numbers = { "one", "two", "three" };
             Func<int, string, string> selector = (nr, number) => nr + " " + number;
             IEnumerable<string> expected = new List<string> { "1 one", "2 two", "3 three" };
-            Assert.Equal(expected, nr.Zip(numbers, selector));
+            Assert.Equal(expected, nr.Zip(numbers, (n1, n2) => selector(n1, n2)));
+        }
+
+        [Fact]
+        public void Aggregate()
+        {
+            string[] fruits = { "banana", "mango", "orange", "apple", "passionfruit" };
+            const string seed = "grape";
+            Func<string, string, string> longestFruit = (seed, fruit) => fruit.Length > seed.Length ? fruit : seed;
+            Assert.Equal("passionfruit", fruits.Aggregate(seed, longestFruit));
         }
     }
 }

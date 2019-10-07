@@ -121,6 +121,23 @@ namespace LinqFunctions
             }
         }
 
+        public static TAccumulate Aggregate<TSource, TAccumulate>(
+    this IEnumerable<TSource> source,
+    TAccumulate seed,
+    Func<TAccumulate, TSource, TAccumulate> func)
+        {
+            CheckNull(source);
+            CheckNull(seed);
+            CheckNull(func);
+            var current = seed;
+            foreach (var s in source)
+            {
+                current = func(current, s);
+            }
+
+            return current;
+        }
+
         private static void CheckNull(object parameter)
         {
             _ = parameter ?? throw new ArgumentNullException(nameof(parameter));
