@@ -6,15 +6,34 @@ namespace LinqFunctions
     {
         static void Main()
         {
-            string[] fruits = { "banana", "mango", "orange", "apple", "passionfruit" };
-            const string seed = "grape";
-            Func<string, string, string> longestFruit = (seed, fruit) => fruit.Length > seed.Length ? fruit : seed;
-            Console.WriteLine(fruits.Aggregate(seed, longestFruit));
+            // Example customers.
+            var customers = new[]
+            {
+            new Customer { ID = 5, Name = "Sam" },
+            new Customer { ID = 6, Name = "Dave" },
+            new Customer { ID = 7, Name = "Julia" },
+            new Customer { ID = 8, Name = "Sue" }
+            };
 
-            int[] ints = { 4, 8, 8, 3, 9, 0, 7, 8, 2 };
-            const int total = 0;
-            Func<int, int, int> totalEvens = (total, number) => number % 2 == 0 ? total + 1 : total;
-            Console.WriteLine(ints.Aggregate(total, totalEvens));
+            // Example orders.
+            var orders = new[]
+            {
+            new Order { ID = 5, Product = "Book" },
+            new Order { ID = 6, Product = "Game" },
+            new Order { ID = 7, Product = "Computer" },
+            new Order { ID = 8, Product = "Shirt" }
+            };
+
+            // Join on the ID properties.
+            var query = from c in customers
+                        join o in orders on c.ID equals o.ID
+                        select new { c.Name, o.Product };
+
+            // Display joined groups.
+            foreach (var group in query)
+            {
+                Console.WriteLine("{0} bought {1}", group.Name, group.Product);
+            }
         }
     }
 }

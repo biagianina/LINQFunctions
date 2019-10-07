@@ -138,6 +138,33 @@ namespace LinqFunctions
             return current;
         }
 
+        public static IEnumerable<TResult> Join<TOuter, TInner, TKey, TResult>(
+    this IEnumerable<TOuter> outer,
+    IEnumerable<TInner> inner,
+    Func<TOuter, TKey> outerKeySelector,
+    Func<TInner, TKey> innerKeySelector,
+    Func<TOuter, TInner, TResult> resultSelector)
+        {
+            CheckNull(outer);
+            CheckNull(inner);
+            CheckNull(outerKeySelector);
+            CheckNull(innerKeySelector);
+            CheckNull(resultSelector);
+            foreach (var o in outer)
+            {
+                var outerKey = outerKeySelector(o);
+
+                foreach (var i in inner)
+                {
+                    var innerKey = innerKeySelector(i);
+                    if (outerKey.Equals(innerKey))
+                    {
+                        yield return resultSelector(o, i);
+                    }
+                }
+            }
+        }
+
         private static void CheckNull(object parameter)
         {
             _ = parameter ?? throw new ArgumentNullException(nameof(parameter));

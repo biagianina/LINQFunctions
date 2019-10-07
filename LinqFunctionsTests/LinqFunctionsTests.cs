@@ -136,5 +136,17 @@ namespace LinqFunctions
             Func<string, string, string> longestFruit = (seed, fruit) => fruit.Length > seed.Length ? fruit : seed;
             Assert.Equal("passionfruit", fruits.Aggregate(seed, longestFruit));
         }
+
+        [Fact]
+        public void Join()
+        {
+            int[] first = { 4, 3, 0 };
+            int[] second = { 5, 4, 2 };
+            Func<int, int> firstKey = number => number + 1;
+            Func<int, int> secondKey = number => number;
+            Func<int, int, int> selector = (x, y) => x;
+            IEnumerable<int> expected = new List<int> { 4, 3 };
+            Assert.Equal(expected, first.Join(second, firstKey, secondKey, selector));
+        }
     }
 }
