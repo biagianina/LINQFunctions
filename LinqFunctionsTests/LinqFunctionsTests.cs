@@ -94,5 +94,28 @@ namespace LinqFunctions
             int[] expected = { 2, 4, 8, 10, 22, 34 };
             Assert.Equal(expected, numbers.Where(number => isEven(number)));
         }
+
+        [Fact]
+        public void ToDictionary()
+        {
+            PetOwner[] petOwners =
+            {
+                new PetOwner { Name = "Higa", Pets = new List<string> { "Scruffy", "Sam" } },
+                new PetOwner { Name = "Ashkenazi", Pets = new List<string> { "Walker", "Sugar" } },
+                new PetOwner { Name = "Price", Pets = new List<string> { "Scratches", "Diesel" } },
+                new PetOwner { Name = "Hines", Pets = new List<string> { "Dusty" } }
+            };
+
+            Dictionary<string, int> expected = new Dictionary<string, int>
+            {
+                { "Higa", 2 },
+                { "Ashkenazi", 2 },
+                { "Price", 2 },
+                { "Hines", 1 }
+            };
+            Func<PetOwner, string> owner = petOwner => petOwner.Name;
+            Func<PetOwner, int> numberOfPets = petOwner => petOwner.Pets.Count;
+            Assert.Equal(expected, petOwners.ToDictionary(petOwner => owner(petOwner), petOwner => numberOfPets(petOwner)));
+        }
     }
 }

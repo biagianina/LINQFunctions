@@ -7,7 +7,8 @@ namespace LinqFunctions
     {
         public static bool All<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            CheckNullSourceOrPredicate(source, predicate);
+            CheckNull(source);
+            CheckNull(predicate);
 
             foreach (var s in source)
             {
@@ -22,7 +23,8 @@ namespace LinqFunctions
 
         public static bool Any<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            CheckNullSourceOrPredicate(source, predicate);
+            CheckNull(source);
+            CheckNull(predicate);
             foreach (var s in source)
             {
                 if (predicate(s))
@@ -36,7 +38,8 @@ namespace LinqFunctions
 
         public static TSource First<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            CheckNullSourceOrPredicate(source, predicate);
+            CheckNull(source);
+            CheckNull(predicate);
             foreach (var s in source)
             {
                 if (predicate(s))
@@ -50,7 +53,8 @@ namespace LinqFunctions
 
         public static IEnumerable<TResult> Select<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector)
         {
-            CheckNullSourceOrPredicate(source, selector);
+            CheckNull(source);
+            CheckNull(selector);
             foreach (var s in source)
             {
                 yield return selector(s);
@@ -59,7 +63,8 @@ namespace LinqFunctions
 
         public static IEnumerable<TResult> SelectMany<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, IEnumerable<TResult>> selector)
         {
-            CheckNullSourceOrPredicate(source, selector);
+            CheckNull(source);
+            CheckNull(selector);
             foreach (var s in source)
             {
                 foreach (var result in selector(s))
@@ -71,7 +76,8 @@ namespace LinqFunctions
 
         public static IEnumerable<TSource> Where<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            CheckNullSourceOrPredicate(source, predicate);
+            CheckNull(source);
+            CheckNull(predicate);
             foreach (var s in source)
             {
                 if (predicate(s))
@@ -81,10 +87,27 @@ namespace LinqFunctions
             }
         }
 
-        private static void CheckNullSourceOrPredicate(object source, object predicate)
+        public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement>(
+    this IEnumerable<TSource> source,
+    Func<TSource, TKey> keySelector,
+    Func<TSource, TElement> elementSelector)
         {
-            _ = source ?? throw new ArgumentNullException(nameof(source));
-            _ = predicate ?? throw new ArgumentNullException(nameof(predicate));
+            CheckNull(source);
+            CheckNull(keySelector);
+            CheckNull(elementSelector);
+            Dictionary<TKey, TElement> result = new Dictionary<TKey, TElement>();
+
+            foreach (var v in source)
+            {
+                result.Add(keySelector(v), elementSelector(v));
+            }
+
+            return result;
+        }
+
+        private static void CheckNull(object parameter)
+        {
+            _ = parameter ?? throw new ArgumentNullException(nameof(parameter));
         }
     }
 }
