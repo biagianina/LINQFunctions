@@ -105,6 +105,22 @@ namespace LinqFunctions
             return result;
         }
 
+        public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(
+    this IEnumerable<TFirst> first,
+    IEnumerable<TSecond> second,
+    Func<TFirst, TSecond, TResult> resultSelector)
+        {
+            CheckNull(first);
+            CheckNull(second);
+            CheckNull(resultSelector);
+            var f = first.GetEnumerator();
+            var s = second.GetEnumerator();
+            while (f.MoveNext() && s.MoveNext())
+            {
+                yield return resultSelector(f.Current, s.Current);
+            }
+        }
+
         private static void CheckNull(object parameter)
         {
             _ = parameter ?? throw new ArgumentNullException(nameof(parameter));

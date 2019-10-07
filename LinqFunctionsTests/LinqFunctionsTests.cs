@@ -117,5 +117,15 @@ namespace LinqFunctions
             Func<PetOwner, int> numberOfPets = petOwner => petOwner.Pets.Count;
             Assert.Equal(expected, petOwners.ToDictionary(petOwner => owner(petOwner), petOwner => numberOfPets(petOwner)));
         }
+
+        [Fact]
+        public void Zip()
+        {
+            int[] nr = { 1, 2, 3, 4 };
+            string[] numbers = { "one", "two", "three" };
+            Func<int, string, string> selector = (nr, number) => nr + " " + number;
+            IEnumerable<string> expected = new List<string> { "1 one", "2 two", "3 three" };
+            Assert.Equal(expected, nr.Zip(numbers, selector));
+        }
     }
 }
