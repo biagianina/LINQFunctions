@@ -180,6 +180,31 @@ namespace LinqFunctions
             }
         }
 
+        public static IEnumerable<TSource> Union<TSource>(
+    this IEnumerable<TSource> first,
+    IEnumerable<TSource> second,
+    IEqualityComparer<TSource> comparer)
+        {
+            CheckNull(first);
+            CheckNull(second);
+            HashSet<TSource> result = new HashSet<TSource>(comparer);
+            foreach (var f in first)
+            {
+                if (result.Add(f))
+                {
+                    yield return f;
+                }
+            }
+
+            foreach (var s in second)
+            {
+                if (result.Add(s))
+                {
+                    yield return s;
+                }
+            }
+        }
+
         private static void CheckNull(object parameter)
         {
             _ = parameter ?? throw new ArgumentNullException(nameof(parameter));
