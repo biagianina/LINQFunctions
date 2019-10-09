@@ -205,6 +205,27 @@ namespace LinqFunctions
             }
         }
 
+        public static IEnumerable<TSource> Intersect<TSource>(
+    this IEnumerable<TSource> first,
+    IEnumerable<TSource> second,
+    IEqualityComparer<TSource> comparer)
+        {
+            CheckNull(first);
+            CheckNull(second);
+            CheckNull(comparer);
+            HashSet<TSource> result = new HashSet<TSource>(comparer);
+            foreach (var f in first)
+            {
+                foreach (var s in second)
+                {
+                    if (comparer.Equals(f, s) && result.Add(f))
+                    {
+                        yield return f;
+                    }
+                }
+            }
+        }
+
         private static void CheckNull(object parameter)
         {
             _ = parameter ?? throw new ArgumentNullException(nameof(parameter));

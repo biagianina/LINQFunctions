@@ -167,5 +167,15 @@ namespace LinqFunctions
             var comparer = new MyComparer<int>();
             Assert.Equal(expected, ints1.Union(ints2, comparer));
         }
+
+        [Fact]
+        public void Intersect()
+        {
+            List<int> ints1 = new List<int> { 5, 3, 9, 7, 5, 9, 3, 7 };
+            List<int> ints2 = new List<int> { 8, 3, 6, 4, 4, 9, 1, 0 };
+            IEnumerable<int> expected = new List<int> { 3, 9 };
+            var comparer = new MyComparer<int>();
+            Assert.Equal(expected, ints1.Intersect(ints2, comparer));
+        }
     }
 }
