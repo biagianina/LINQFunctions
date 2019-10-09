@@ -213,16 +213,31 @@ namespace LinqFunctions
             CheckNull(first);
             CheckNull(second);
             CheckNull(comparer);
-            HashSet<TSource> result = new HashSet<TSource>(comparer);
+            HashSet<TSource> result = new HashSet<TSource>(first, comparer);
+            foreach (var s in second)
+            {
+                if (result.Contains(s))
+                {
+                    yield return s;
+                }
+            }
+        }
+
+        public static IEnumerable<TSource> Except<TSource>(
+    this IEnumerable<TSource> first,
+    IEnumerable<TSource> second,
+    IEqualityComparer<TSource> comparer)
+        {
+            CheckNull(first);
+            CheckNull(second);
+            CheckNull(comparer);
+            HashSet<TSource> result = new HashSet<TSource>(second, comparer);
             foreach (var f in first)
             {
-                foreach (var s in second)
-                {
-                    if (comparer.Equals(f, s) && result.Add(f))
-                    {
-                        yield return f;
-                    }
-                }
+               if (!result.Contains(f))
+               {
+                    yield return f;
+               }
             }
         }
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LinqFunctions
+﻿namespace LinqFunctions
 {
     class Customer
     {
