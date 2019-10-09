@@ -29,10 +29,14 @@ namespace LinqFunctions
                         join o in orders on c.ID equals o.ID
                         select new { c.Name, o.Product };
 
+            Func<Customer, int> firstKey = customer => customer.ID;
+            Func<Order, int> secondKey = order => order.ID;
+            Func<Customer, Order, string> selector = (x, y) => x.Name + " bought " + y.Product;
+
             // Display joined groups.
-            foreach (var group in query)
+            foreach (var item in customers.Join(orders, firstKey, secondKey, selector))
             {
-                Console.WriteLine("{0} bought {1}", group.Name, group.Product);
+                Console.WriteLine(item);
             }
         }
     }

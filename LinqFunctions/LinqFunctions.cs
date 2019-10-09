@@ -165,6 +165,21 @@ namespace LinqFunctions
             }
         }
 
+        public static IEnumerable<TSource> Distinct<TSource>(
+    this IEnumerable<TSource> source,
+    IEqualityComparer<TSource> comparer)
+        {
+            CheckNull(source);
+            HashSet<TSource> result = new HashSet<TSource>(comparer);
+            foreach (var s in source)
+            {
+                if (result.Add(s))
+                {
+                    yield return s;
+                }
+            }
+        }
+
         private static void CheckNull(object parameter)
         {
             _ = parameter ?? throw new ArgumentNullException(nameof(parameter));

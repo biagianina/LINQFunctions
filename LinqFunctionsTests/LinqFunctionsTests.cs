@@ -148,5 +148,14 @@ namespace LinqFunctions
             IEnumerable<int> expected = new List<int> { 4, 3 };
             Assert.Equal(expected, first.Join(second, firstKey, secondKey, selector));
         }
+
+        [Fact]
+        public void Distinct()
+        {
+            List<int> ages = new List<int> { 21, 46, 46, 55, 17, 21, 55, 55 };
+            IEnumerable<int> expected = new List<int> { 21, 46, 55, 17 };
+            var comparer = new MyComparer<int>();
+            Assert.Equal(expected, ages.Distinct(comparer));
+        }
     }
 }
