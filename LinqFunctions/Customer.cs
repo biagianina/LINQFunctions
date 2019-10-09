@@ -1,8 +1,8 @@
 ﻿namespace LinqFunctions
 {
-    class Customer
+    public class Customer
     {
-        public int ID { get; set; }
+        public int Age { get; set; }
 
         public string Name { get; set; }
     }

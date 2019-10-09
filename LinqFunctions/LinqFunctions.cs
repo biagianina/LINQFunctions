@@ -241,6 +241,37 @@ namespace LinqFunctions
             }
         }
 
+        public static IEnumerable<TResult> GroupBy<TSource, TKey, TElement, TResult>(
+    this IEnumerable<TSource> source,
+    Func<TSource, TKey> keySelector,
+    Func<TSource, TElement> elementSelector,
+    Func<TKey, IEnumerable<TElement>, TResult> resultSelector,
+    IEqualityComparer<TKey> comparer)
+        {
+            CheckNull(source);
+            CheckNull(keySelector);
+            CheckNull(elementSelector);
+            CheckNull(resultSelector);
+            var groups = new Dictionary<TKey, List<TElement>>(comparer);
+            foreach (var s in source)
+            {
+                var key = keySelector(s);
+                if (!groups.ContainsKey(key))
+                {
+                    groups.Add(key, new List<TElement>() { elementSelector(s) });
+                }
+                else
+                {
+                    groups[key].Add(elementSelector(s));
+                }
+            }
+
+            foreach (var group in groups)
+            {
+                yield return resultSelector(group.Key, group.Value);
+            }
+        }
+
         private static void CheckNull(object parameter)
         {
             _ = parameter ?? throw new ArgumentNullException(nameof(parameter));

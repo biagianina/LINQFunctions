@@ -187,5 +187,23 @@ namespace LinqFunctions
             var comparer = new MyComparer<int>();
             Assert.Equal(expected, ints1.Except(ints2, comparer));
         }
+
+        [Fact]
+        public void GroupBy()
+        {
+            var customers = new[]
+            {
+            new Customer { Age = 25, Name = "Sam" },
+            new Customer { Age = 26, Name = "Dave" },
+            new Customer { Age = 25, Name = "Julia" },
+            new Customer { Age = 28, Name = "Sue" }
+            };
+            var comparer = new MyComparer<int>();
+            Func<Customer, int> key = customer => customer.Age;
+            Func<Customer, string> element = customer => customer.Name;
+            Func<int, IEnumerable<string>, string> selector = (key, elements) => key + " " + string.Join(" ", elements);
+            List<string> expected = new List<string> { "25 Sam Julia", "26 Dave", "28 Sue" };
+            Assert.Equal(expected, customers.GroupBy(key, element, selector, comparer));
+        }
     }
 }

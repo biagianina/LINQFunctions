@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace LinqFunctions
 {
@@ -6,35 +7,18 @@ namespace LinqFunctions
     {
         static void Main()
         {
-            // Example customers.
             var customers = new[]
             {
-            new Customer { ID = 5, Name = "Sam" },
-            new Customer { ID = 6, Name = "Dave" },
-            new Customer { ID = 7, Name = "Julia" },
-            new Customer { ID = 8, Name = "Sue" }
+            new Customer { Age = 25, Name = "Sam" },
+            new Customer { Age = 26, Name = "Dave" },
+            new Customer { Age = 25, Name = "Julia" },
+            new Customer { Age = 28, Name = "Sue" }
             };
-
-            // Example orders.
-            var orders = new[]
-            {
-            new Order { ID = 5, Product = "Book" },
-            new Order { ID = 6, Product = "Game" },
-            new Order { ID = 7, Product = "Computer" },
-            new Order { ID = 8, Product = "Shirt" }
-            };
-
-            // Join on the ID properties.
-            var query = from c in customers
-                        join o in orders on c.ID equals o.ID
-                        select new { c.Name, o.Product };
-
-            Func<Customer, int> firstKey = customer => customer.ID;
-            Func<Order, int> secondKey = order => order.ID;
-            Func<Customer, Order, string> selector = (x, y) => x.Name + " bought " + y.Product;
-
-            // Display joined groups.
-            foreach (var item in customers.Join(orders, firstKey, secondKey, selector))
+            var comparer = new MyComparer<int>();
+            Func<Customer, int> key = customer => customer.Age;
+            Func<Customer, string> element = customer => customer.Name;
+            Func<int, IEnumerable<string>, string> selector = (key, elements) => key + " " + string.Join(" ", elements);
+            foreach (var item in customers.GroupBy(key, element, selector, comparer))
             {
                 Console.WriteLine(item);
             }
