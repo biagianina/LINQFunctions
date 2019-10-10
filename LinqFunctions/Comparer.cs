@@ -3,16 +3,18 @@ using System.Collections.Generic;
 
 namespace LinqFunctions
 {
-    public class MyComparer<T> : IEqualityComparer<T>
+    public class MyComparer<T> : IComparer<T>
     {
-        public bool Equals(T x, T y)
+        readonly Func<T, T, int> comp;
+
+        public MyComparer(Func<T, T, int> comp)
         {
-            return x != null && y != null && x.Equals(y);
+            this.comp = comp;
         }
 
-        public int GetHashCode(T obj)
+        public int Compare(T x, T y)
         {
-            return obj != null ? obj.GetHashCode() : 0;
+            return comp(x, y);
         }
     }
 }

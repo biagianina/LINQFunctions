@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace LinqFunctions
@@ -154,7 +155,7 @@ namespace LinqFunctions
         {
             List<int> ages = new List<int> { 21, 46, 46, 55, 17, 21, 55, 55 };
             IEnumerable<int> expected = new List<int> { 21, 46, 55, 17 };
-            var comparer = new MyComparer<int>();
+            var comparer = new EqualityComparer<int>();
             Assert.Equal(expected, ages.Distinct(comparer));
         }
 
@@ -164,7 +165,7 @@ namespace LinqFunctions
             List<int> ints1 = new List<int> { 5, 3, 9, 7, 5, 9, 3, 7 };
             List<int> ints2 = new List<int> { 8, 3, 6, 4, 4, 9, 1, 0 };
             IEnumerable<int> expected = new List<int> { 5, 3, 9, 7, 8, 6, 4, 1, 0 };
-            var comparer = new MyComparer<int>();
+            var comparer = new EqualityComparer<int>();
             Assert.Equal(expected, ints1.Union(ints2, comparer));
         }
 
@@ -174,7 +175,7 @@ namespace LinqFunctions
             List<int> ints1 = new List<int> { 5, 3, 9, 7, 5, 9, 3, 7 };
             List<int> ints2 = new List<int> { 8, 3, 6, 4, 4, 9, 1, 0 };
             IEnumerable<int> expected = new List<int> { 3, 9 };
-            var comparer = new MyComparer<int>();
+            var comparer = new EqualityComparer<int>();
             Assert.Equal(expected, ints1.Intersect(ints2, comparer));
         }
 
@@ -184,7 +185,7 @@ namespace LinqFunctions
             List<int> ints1 = new List<int> { 5, 3, 9, 7, 5, 9, 3, 7 };
             List<int> ints2 = new List<int> { 8, 3, 6, 4, 4, 9, 1, 0 };
             IEnumerable<int> expected = new List<int> { 5, 7, 5, 7 };
-            var comparer = new MyComparer<int>();
+            var comparer = new EqualityComparer<int>();
             Assert.Equal(expected, ints1.Except(ints2, comparer));
         }
 
@@ -198,12 +199,41 @@ namespace LinqFunctions
             new Customer { Age = 25, Name = "Julia" },
             new Customer { Age = 28, Name = "Sue" }
             };
-            var comparer = new MyComparer<int>();
+            var comparer = new EqualityComparer<int>();
             Func<Customer, int> key = customer => customer.Age;
             Func<Customer, string> element = customer => customer.Name;
             Func<int, IEnumerable<string>, string> selector = (key, elements) => key + " " + string.Join(" ", elements);
             List<string> expected = new List<string> { "25 Sam Julia", "26 Dave", "28 Sue" };
             Assert.Equal(expected, customers.GroupBy(key, element, selector, comparer));
+        }
+
+        [Fact]
+        public void OrderBy()
+        {
+            Customer sam = new Customer { Age = 25, Name = "Sam" };
+            Customer dave = new Customer { Age = 26, Name = "Dave" };
+            Customer julia = new Customer { Age = 25, Name = "Julia" };
+            Customer sue = new Customer { Age = 28, Name = "Sue" };
+            Customer sally = new Customer { Age = 21, Name = "Sally" };
+            var customers = new[]
+            {
+            sam,
+            dave,
+            julia,
+            sue,
+            sally
+            };
+            var comparer = new MyComparer<int>((x, y) => x.CompareTo(y));
+            var orderedByAge = customers.OrderBy(customer => customer.Age, comparer);
+            Assert.Equal(
+                new[]
+                {
+                sally,
+                sam,
+                julia,
+                dave,
+                sue
+                }, orderedByAge);
         }
     }
 }

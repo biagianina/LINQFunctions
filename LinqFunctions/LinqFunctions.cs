@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LinqFunctions
 {
@@ -270,6 +271,16 @@ namespace LinqFunctions
             {
                 yield return resultSelector(group.Key, group.Value);
             }
+        }
+
+        public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(
+    this IEnumerable<TSource> source,
+    Func<TSource, TKey> keySelector,
+    IComparer<TKey> comparer)
+        {
+            CheckNull(source);
+            CheckNull(keySelector);
+            return new Order<TSource, TKey>(source, keySelector, comparer);
         }
 
         private static void CheckNull(object parameter)

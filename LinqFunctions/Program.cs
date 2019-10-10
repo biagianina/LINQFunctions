@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace LinqFunctions
 {
@@ -7,20 +6,23 @@ namespace LinqFunctions
     {
         static void Main()
         {
+            Customer sam = new Customer { Age = 25, Name = "Sam" };
+            Customer dave = new Customer { Age = 26, Name = "Dave" };
+            Customer julia = new Customer { Age = 25, Name = "Julia" };
+            Customer sue = new Customer { Age = 28, Name = "Sue" };
+            Customer sally = new Customer { Age = 21, Name = "Sally" };
             var customers = new[]
             {
-            new Customer { Age = 25, Name = "Sam" },
-            new Customer { Age = 26, Name = "Dave" },
-            new Customer { Age = 25, Name = "Julia" },
-            new Customer { Age = 28, Name = "Sue" }
+            sam,
+            dave,
+            julia,
+            sue,
+            sally
             };
-            var comparer = new MyComparer<int>();
-            Func<Customer, int> key = customer => customer.Age;
-            Func<Customer, string> element = customer => customer.Name;
-            Func<int, IEnumerable<string>, string> selector = (key, elements) => key + " " + string.Join(" ", elements);
-            foreach (var item in customers.GroupBy(key, element, selector, comparer))
+            var comparer = new MyComparer<int>((x, y) => x.CompareTo(y));
+            foreach (var item in customers.OrderBy(customer => customer.Age, comparer))
             {
-                Console.WriteLine(item);
+                Console.WriteLine(item.Age + " " + item.Name);
             }
         }
     }

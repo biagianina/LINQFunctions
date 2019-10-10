@@ -6,6 +6,11 @@
   </PropertyGroup>
   <PropertyGroup>
     <CodeAnalysisRuleSet>juniormind.ruleset</CodeAnalysisRuleSet>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>binx\Debug\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.5">
