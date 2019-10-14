@@ -44,22 +44,14 @@ namespace LinqFunctions
 
         private void Swap(int minIndex, List<T> elements)
         {
-            for (int i = minIndex + 1; i < elements.Count; i++)
+            for (int i = elements.Count - 1; i >= minIndex; i--)
             {
                 if (comparer.Compare(keySelector(elements[i]), keySelector(elements[minIndex])) < 0)
                 {
-                    var minimum = elements[i];
-                    ShiftRight(elements, minIndex, i);
-                    elements[minIndex] = minimum;
+                    var temp = elements[i];
+                    elements[i] = elements[minIndex];
+                    elements[minIndex] = temp;
                 }
-            }
-        }
-
-        private void ShiftRight(List<T> elements, int minIndex, int index)
-        {
-            for (int i = index; i > minIndex; i--)
-            {
-                elements[i] = elements[i - 1];
             }
         }
     }

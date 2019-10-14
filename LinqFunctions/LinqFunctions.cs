@@ -283,6 +283,16 @@ namespace LinqFunctions
             return new Order<TSource, TKey>(source, keySelector, comparer);
         }
 
+        public static IOrderedEnumerable<TSource> ThenBy<TSource, TKey>(
+    this IOrderedEnumerable<TSource> source,
+    Func<TSource, TKey> keySelector,
+    IComparer<TKey> comparer)
+        {
+            CheckNull(source);
+            CheckNull(keySelector);
+            return source.CreateOrderedEnumerable<TKey>(keySelector, comparer, false);
+        }
+
         private static void CheckNull(object parameter)
         {
             _ = parameter ?? throw new ArgumentNullException(nameof(parameter));
