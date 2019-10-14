@@ -48,9 +48,18 @@ namespace LinqFunctions
             {
                 if (comparer.Compare(keySelector(elements[i]), keySelector(elements[minIndex])) < 0)
                 {
-                    elements.Insert(minIndex, elements[i]);
-                    elements.RemoveAt(i + 1);
+                    var minimum = elements[i];
+                    ShiftRight(elements, minIndex, i);
+                    elements[minIndex] = minimum;
                 }
+            }
+        }
+
+        private void ShiftRight(List<T> elements, int minIndex, int index)
+        {
+            for (int i = index; i > minIndex; i--)
+            {
+                elements[i] = elements[i - 1];
             }
         }
     }
