@@ -28,7 +28,10 @@ namespace LinqFunctions
             List<T> elements = source.ToList();
             for (int minIndex = 0; minIndex < elements.Count - 1; minIndex++)
             {
-                Swap(minIndex, elements);
+                int minimum = GetMinimumIndex(minIndex, elements);
+                var temp = elements[minIndex];
+                elements[minIndex] = elements[minimum];
+                elements[minimum] = temp;
             }
 
             foreach (var item in elements)
@@ -42,17 +45,20 @@ namespace LinqFunctions
             return GetEnumerator();
         }
 
-        private void Swap(int minIndex, List<T> elements)
+        private int GetMinimumIndex(int minIndex, List<T> elements)
         {
-            for (int i = elements.Count - 1; i >= minIndex; i--)
+            var minimum = minIndex;
+            for (int i = minimum; i < elements.Count; i++)
             {
-                if (comparer.Compare(keySelector(elements[i]), keySelector(elements[minIndex])) < 0)
-                {
-                    var temp = elements[i];
-                    elements[i] = elements[minIndex];
-                    elements[minIndex] = temp;
-                }
+                minimum = GetMinimum(i, minimum, elements);
             }
+
+            return minimum;
+        }
+
+        private int GetMinimum(int i, int minimum, List<T> elements)
+        {
+            return comparer.Compare(keySelector(elements[i]), keySelector(elements[minimum])) < 0 ? i : minimum;
         }
     }
 }
