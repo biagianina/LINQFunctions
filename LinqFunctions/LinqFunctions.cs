@@ -290,7 +290,7 @@ namespace LinqFunctions
         {
             CheckNull(source);
             CheckNull(keySelector);
-            return source.CreateOrderedEnumerable<TKey>(keySelector, comparer, false);
+            return source.CreateOrderedEnumerable(keySelector, comparer, false);
         }
 
         private static void CheckNull(object parameter)

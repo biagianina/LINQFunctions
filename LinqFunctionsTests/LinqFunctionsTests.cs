@@ -231,8 +231,8 @@ namespace LinqFunctions
                 new[]
                 {
                 sally,
-                julia,
                 sam,
+                julia,
                 adam,
                 dave,
                 sue

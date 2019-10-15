@@ -29,9 +29,7 @@ namespace LinqFunctions
             for (int minIndex = 0; minIndex < elements.Count - 1; minIndex++)
             {
                 int minimum = GetMinimumIndex(minIndex, elements);
-                var temp = elements[minIndex];
-                elements[minIndex] = elements[minimum];
-                elements[minimum] = temp;
+                InsertAtMinimumIndex(minimum, minIndex, elements);
             }
 
             foreach (var item in elements)
@@ -59,6 +57,22 @@ namespace LinqFunctions
         private int GetMinimum(int i, int minimum, List<T> elements)
         {
             return comparer.Compare(keySelector(elements[i]), keySelector(elements[minimum])) < 0 ? i : minimum;
+        }
+
+        private void InsertAtMinimumIndex(int a, int minIndex, List<T> elements)
+        {
+            if (minIndex == a)
+            {
+                return;
+            }
+
+            var minimum = elements[a];
+            for (int i = a; i > minIndex; i--)
+            {
+                elements[i] = elements[i - 1];
+            }
+
+            elements[minIndex] = minimum;
         }
     }
 }

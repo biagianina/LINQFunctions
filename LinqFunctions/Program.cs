@@ -12,6 +12,7 @@ namespace LinqFunctions
             Customer sue = new Customer { Age = 28, Name = "Sue" };
             Customer sally = new Customer { Age = 21, Name = "Sally" };
             Customer adam = new Customer { Age = 25, Name = "Adam" };
+            Customer alice = new Customer { Age = 19, Name = "Alice" };
             var customers = new[]
             {
             sam,
@@ -19,7 +20,8 @@ namespace LinqFunctions
             julia,
             sue,
             sally,
-            adam
+            adam,
+            alice
             };
             var comparer = new MyComparer<int>((x, y) => x.CompareTo(y));
             foreach (var item in customers.OrderBy(customer => customer.Age, comparer))
