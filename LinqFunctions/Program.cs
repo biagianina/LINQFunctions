@@ -12,7 +12,6 @@ namespace LinqFunctions
             Customer sue = new Customer { Age = 28, Name = "Sue" };
             Customer sally = new Customer { Age = 21, Name = "Sally" };
             Customer adam = new Customer { Age = 25, Name = "Adam" };
-            Customer alice = new Customer { Age = 19, Name = "Alice" };
             var customers = new[]
             {
             sam,
@@ -20,11 +19,15 @@ namespace LinqFunctions
             julia,
             sue,
             sally,
-            adam,
-            alice
+            adam
             };
-            var comparer = new MyComparer<int>((x, y) => x.CompareTo(y));
-            foreach (var item in customers.OrderBy(customer => customer.Age, comparer))
+            var intComparer = new MyComparer<int>((x, y) => x.CompareTo(y));
+            Func<Customer, int> ageSelector = c => c.Age;
+            var firstComparer = new KeyComparer<Customer, int>(intComparer, ageSelector);
+            var stringComparer = new MyComparer<string>((x, y) => x.CompareTo(y));
+            Func<Customer, string> nameSelector = c => c.Name;
+            var secondComparer = new KeyComparer<Customer, string>(stringComparer, nameSelector);
+            foreach (var item in customers.OrderBy(customer => customer, firstComparer).ThenBy(customers => customers, secondComparer))
             {
                 Console.WriteLine(item.Age + " " + item.Name);
             }

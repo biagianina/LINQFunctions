@@ -280,7 +280,8 @@ namespace LinqFunctions
         {
             CheckNull(source);
             CheckNull(keySelector);
-            return new Order<TSource, TKey>(source, keySelector, comparer);
+            var comp = new KeyComparer<TSource, TKey>(comparer, keySelector);
+            return new Order<TSource, TKey>(source, comp);
         }
 
         public static IOrderedEnumerable<TSource> ThenBy<TSource, TKey>(
@@ -290,6 +291,7 @@ namespace LinqFunctions
         {
             CheckNull(source);
             CheckNull(keySelector);
+            var comp = new KeyComparer<TSource, TKey>(comparer, keySelector);
             return source.CreateOrderedEnumerable(keySelector, comparer, false);
         }
 

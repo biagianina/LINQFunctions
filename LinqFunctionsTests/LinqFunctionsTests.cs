@@ -216,6 +216,7 @@ namespace LinqFunctions
             Customer sue = new Customer { Age = 28, Name = "Sue" };
             Customer sally = new Customer { Age = 21, Name = "Sally" };
             Customer adam = new Customer { Age = 25, Name = "Adam" };
+            Customer angie = new Customer { Age = 19, Name = "Angie" };
             var customers = new[]
             {
             sam,
@@ -223,20 +224,70 @@ namespace LinqFunctions
             julia,
             sue,
             sally,
-            adam
+            adam,
+            angie
             };
-            var comparer = new MyComparer<int>((x, y) => x.CompareTo(y));
-            var orderedByAge = customers.OrderBy(customer => customer.Age, comparer);
+
+            var comparer = new MyComparer<Customer>((x, y) =>
+            {
+                int result = x.Age.CompareTo(y.Age);
+                return result == 0 ? x.Name.CompareTo(y.Name) : result;
+            });
+            var orderedByAge = customers
+                .OrderBy(c => c, comparer);
             Assert.Equal(
                 new[]
                 {
+                angie,
                 sally,
-                sam,
-                julia,
                 adam,
+                julia,
+                sam,
                 dave,
                 sue
                 }, orderedByAge);
+        }
+
+        [Fact]
+        public void OrderByThenBy()
+        {
+            Customer sam = new Customer { Age = 25, Name = "Sam" };
+            Customer dave = new Customer { Age = 26, Name = "Dave" };
+            Customer julia = new Customer { Age = 25, Name = "Julia" };
+            Customer sue = new Customer { Age = 28, Name = "Sue" };
+            Customer sally = new Customer { Age = 21, Name = "Sally" };
+            Customer adam = new Customer { Age = 25, Name = "Adam" };
+            Customer angie = new Customer { Age = 19, Name = "Angie" };
+            var customers = new[]
+            {
+            sam,
+            dave,
+            julia,
+            sue,
+            sally,
+            adam,
+            angie
+            };
+
+            var intComparer = new MyComparer<int>((x, y) => x.CompareTo(y));
+            Func<Customer, int> ageSelector = c => c.Age;
+            var firstComparer = new KeyComparer<Customer, int>(intComparer, ageSelector);
+            var stringComparer = new MyComparer<string>((x, y) => x.CompareTo(y));
+            Func<Customer, string> nameSelector = c => c.Name;
+            var secondComparer = new KeyComparer<Customer, string>(stringComparer, nameSelector);
+            var orderedByAgeAndName = customers
+                .OrderBy(c => c, firstComparer).ThenBy(c => c, secondComparer);
+            Assert.Equal(
+                new[]
+                {
+                angie,
+                sally,
+                adam,
+                julia,
+                sam,
+                dave,
+                sue
+                }, orderedByAgeAndName);
         }
     }
 }

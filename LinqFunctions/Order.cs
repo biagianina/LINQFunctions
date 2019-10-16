@@ -5,31 +5,30 @@ using System.Linq;
 
 namespace LinqFunctions
 {
-    class Order<T, Tkey> : IOrderedEnumerable<T>
+    class Order<TSource, TKey> : IOrderedEnumerable<TSource>
     {
-        private readonly IEnumerable<T> source;
-        readonly Func<T, Tkey> keySelector;
-        readonly IComparer<Tkey> comparer;
+        private readonly IEnumerable<TSource> source;
+        private readonly IComparer<TSource> comparer;
 
-        public Order(IEnumerable<T> source, Func<T, Tkey> keySelector, IComparer<Tkey> comparer)
+        public Order(IEnumerable<TSource> source, IComparer<TSource> initialComparer)
         {
             this.source = source;
-            this.keySelector = keySelector;
-            this.comparer = comparer;
+            comparer = initialComparer;
         }
 
-        public IOrderedEnumerable<T> CreateOrderedEnumerable<TKey>(Func<T, TKey> keySelector, IComparer<TKey> comparer, bool descending)
+        public IOrderedEnumerable<TSource> CreateOrderedEnumerable<TKey>(Func<TSource, TKey> keySelector, IComparer<TKey> keyComparer, bool descending)
         {
-            throw new NotImplementedException();
+            var comparers = new Comparers<TSource>(comparer, new KeyComparer<TSource, TKey>(keyComparer, keySelector));
+            return new Order<TSource, TKey>(this, comparers);
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<TSource> GetEnumerator()
         {
-            List<T> elements = source.ToList();
+            List<TSource> elements = source.ToList();
             for (int minIndex = 0; minIndex < elements.Count - 1; minIndex++)
             {
                 int minimum = GetMinimumIndex(minIndex, elements);
-                InsertAtMinimumIndex(minimum, minIndex, elements);
+                Swap(minimum, minIndex, elements);
             }
 
             foreach (var item in elements)
@@ -43,7 +42,7 @@ namespace LinqFunctions
             return GetEnumerator();
         }
 
-        private int GetMinimumIndex(int minIndex, List<T> elements)
+        private int GetMinimumIndex(int minIndex, List<TSource> elements)
         {
             var minimum = minIndex;
             for (int i = minimum; i < elements.Count; i++)
@@ -54,25 +53,21 @@ namespace LinqFunctions
             return minimum;
         }
 
-        private int GetMinimum(int i, int minimum, List<T> elements)
+        private int GetMinimum(int i, int minimum, List<TSource> elements)
         {
-            return comparer.Compare(keySelector(elements[i]), keySelector(elements[minimum])) < 0 ? i : minimum;
+            return comparer.Compare(elements[i], elements[minimum]) < 0 ? i : minimum;
         }
 
-        private void InsertAtMinimumIndex(int a, int minIndex, List<T> elements)
+        private void Swap(int minimum, int minIndex, List<TSource> elements)
         {
-            if (minIndex == a)
+            if (minIndex == minimum)
             {
                 return;
             }
 
-            var minimum = elements[a];
-            for (int i = a; i > minIndex; i--)
-            {
-                elements[i] = elements[i - 1];
-            }
-
-            elements[minIndex] = minimum;
+            var temp = elements[minimum];
+            elements[minimum] = elements[minIndex];
+            elements[minIndex] = temp;
         }
     }
 }
