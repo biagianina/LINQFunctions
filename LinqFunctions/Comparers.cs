@@ -2,7 +2,7 @@
 
 namespace LinqFunctions
 {
-    internal class Comparers<T> : IComparer<T>
+    internal class Comparers<T, TKey> : IComparer<T>
     {
         readonly IComparer<T> first;
         readonly IComparer<T> second;

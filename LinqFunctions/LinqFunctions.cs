@@ -291,7 +291,6 @@ namespace LinqFunctions
         {
             CheckNull(source);
             CheckNull(keySelector);
-            var comp = new KeyComparer<TSource, TKey>(comparer, keySelector);
             return source.CreateOrderedEnumerable(keySelector, comparer, false);
         }
 

@@ -13,12 +13,12 @@ namespace LinqFunctions
         public Order(IEnumerable<TSource> source, IComparer<TSource> initialComparer)
         {
             this.source = source;
-            comparer = initialComparer;
+            this.comparer = initialComparer;
         }
 
         public IOrderedEnumerable<TSource> CreateOrderedEnumerable<TKey>(Func<TSource, TKey> keySelector, IComparer<TKey> keyComparer, bool descending)
         {
-            var comparers = new Comparers<TSource>(comparer, new KeyComparer<TSource, TKey>(keyComparer, keySelector));
+            var comparers = new Comparers<TSource, TKey>(comparer, new KeyComparer<TSource, TKey>(keyComparer, keySelector));
             return new Order<TSource, TKey>(this, comparers);
         }
 
